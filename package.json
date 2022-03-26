@@ -10,5 +10,18 @@
     "Timelines"
   ],
   "author": "Haoran Yang",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^17.2.0",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lazenander/TempusLinea.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lazenander/TempusLinea/issues"
+  },
+  "homepage": "https://github.com/Lazenander/TempusLinea#readme"
 }
