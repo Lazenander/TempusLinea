@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/main.css" />
+    <title>贞元 TempusLinea</title>
+</head>
+
+<body>
+    <div id="mainContainer" class="container">
+        <div class="timelineContainer">
+            <div class="ltime">
+                <p id="leftTime">原初 Start</p>
+            </div>
+            <div class="rtime">
+                <p id="rightTime">终末 End</p>
+            </div>
+            <div class="timeline"></div>
+        </div>
+        <div id="hint" class="timeHint">
+            <p>Please set the type of time first</p>
+            <p>请先在这里设置时间的类型 →</p>
+        </div>
+        <div id="eventEditor" class="eventEditorContainer">
+            <div class="container" onclick="ocEE()"></div>
+            <div id="x" class="eventEditorXButton">
+                <img src="../res/svg/x.svg" onclick="ocx()" />
+            </div>
+            <div class="eventEditorDescriptionContainer">
+                <div class="eventEditorMainBlock">
+                    <h3>事件时刻 EventTime</h3>
+                    <div id="eventTimeEditor" class="timeEditorContainer">
+                    </div>
+                </div>
+                <div class="eventEditorMainBlock">
+                    <h3>事件标签 EventTags </h3>
+                    <div id="eventTagsEditor" class="tagsEditorContainer">
+                    </div>
+                    <div class="tagsPlusContainer">
+                        <div class="tagsButton">
+                            <img src="../res/svg/plus-square.svg" onclick="oceventTagsEditorPlus()" />
+                        </div>
+                        <div class="space"></div>
+                        <input class="tagsInput" type="text" id="eventEditorNewTag" />
+                    </div>
+                    <div class="tagsMinusContainer">
+                        <div class="tagsButton">
+                            <img src="../res/svg/minus-square.svg" onclick="oceventTagsEditorMinus()" />
+                        </div>
+                        <div class="space"></div>
+                        <input class="tagsInput" type="text" id="eventEditorDeleteTag" />
+                    </div>
+                </div>
+                <div class="eventEditorMainBlock">
+                    <h3>事件标题 EventTitle</h3>
+                    <input class="titleInput" type="text" id="eventTitle" />
+                </div>
+                <div class="eventEditorMainBlock">
+                    <h3>事件内容 EventDescription</h3>
+                    <textarea class="descriptionInput" id="eventDescription"></textarea>
+                </div>
+                <div class="eventEditorMainBlock">
+                    <div class="rowCenter">
+                        <button onclick="oceventEditorFinished()">确定 Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="eventShower" class="eventShowerContainer">
+            <div class="container" onclick="ocES()"></div>
+            <div id="x" class="eventEditorXButton">
+                <img src="../res/svg/x.svg" onclick="ocesx()" />
+            </div>
+            <div class="eventShowerMainBlock4Button">
+                <button onclick="ocdeleteShowedEvent()">删除 Delete</button>
+                <button onclick="oceditShowedEvent()">编辑 Edit</button>
+            </div>
+            <div class="eventShowerDescriptionContainer">
+                <div class="eventShowerMainBlock">
+                    <h3 id="eventShowerTime"></h3>
+                </div>
+                <div class="eventShowerMainBlock">
+                    <h3 id="eventShowerTitle"></h3>
+                </div>
+                <div class="eventShowerMainBlock">
+                    <p id="eventShowerTags">
+                    </p>
+                </div>
+                <div class="eventShowerMainBlock">
+                    <p id="eventShowerDescription">
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="sliderSettings" class="sliderSettingsContainer">
+            <div class="container" onclick="ocSS()"></div>
+            <div class="sliderSettingContentContainer">
+                <div id="clock" class="sliderSettingContentButton">
+                    <img src="../res/svg/clock.svg" onclick="ocsliderClock()" />
+                </div>
+                <div id="view" class="sliderSettingContentButton">
+                    <img src="../res/svg/eye.svg" onclick="ocsliderView()" />
+                </div>
+                <div id="search" class="sliderSettingContentButton">
+                    <img src="../res/svg/search.svg" onclick="ocsliderSearch()" />
+                </div>
+                <div id="info" class="sliderSettingContentButton">
+                    <img src="../res/svg/info.svg" onclick="ocsliderInfo()" />
+                </div>
+            </div>
+            <div class="sliderSettingMainContainer">
+                <div id="timeTypeEditor" class="sliderSettingMainBlock">
+                    <h3>时间类型 TimeType</h3>
+                    <div class="checkBoxContainer">
+                        <input type="radio" name="timeType" value="ADay" />
+                        <p>一日 A Day</p>
+                    </div>
+                    <div class="checkBoxContainer">
+                        <input type="radio" name="timeType" value="Gregorian" checked="true" />
+                        <p>地球公历 Gregorian Calendar (Earth)</p>
+                    </div>
+                    <div class="checkBoxContainer">
+                        <input type="radio" name="timeType" value="ECStandard" />
+                        <p>青陵元历 Standard Calendar (Elegy of Cyan)</p>
+                    </div>
+                </div>
+                <div id="timeTypeEditorButton" class="sliderSettingMainBlock">
+                    <div class="rowCenter">
+                        <button onclick="ocsliderTimeTypeEditor()">确定 Confirm</button>
+                    </div>
+                </div>
+                <div id="startTimeTypeEditorContainer" class="sliderSettingMainBlock">
+                    <h3>最小时刻 StartTime </h3>
+                    <div id="sliderStartTimeEditor" class="timeEditorContainer">
+                    </div>
+                </div>
+                <div id="startTimeTypeEditorButton" class="sliderSettingMainBlock">
+                    <div class="rowCenter">
+                        <button onclick="ocstartSliderTimeTypeEditor()">确定 Confirm</button>
+                    </div>
+                </div>
+                <div id="endTimeTypeEditorContainer" class="sliderSettingMainBlock">
+                    <h3>最大时刻 EndTime </h3>
+                    <div id="sliderEndTimeEditor" class="timeEditorContainer">
+                    </div>
+                </div>
+                <div id="endTimeTypeEditorButton" class="sliderSettingMainBlock">
+                    <div class="rowCenter">
+                        <button onclick="ocendSliderTimeTypeEditor()">确定 Confirm</button>
+                    </div>
+                </div>
+                <div id="tagsContainer" class="sliderSettingMainBlock">
+                    <h3>标签 Tags</h3>
+                    <div id="sliderTagsEditor" class="tagsEditorContainer">
+                    </div>
+                    <div class="tagsPlusContainer">
+                        <div class="tagsButton">
+                            <img src="../res/svg/plus-square.svg" onclick="ocsliderTagsEditorPlus()" />
+                        </div>
+                        <div class="space"></div>
+                        <input class="tagsInput" type="text" id="sliderNewTag" />
+                    </div>
+                    <div class="tagsMinusContainer">
+                        <div class="tagsButton">
+                            <img src="../res/svg/minus-square.svg" onclick="ocsliderTagsEditorMinus()" />
+                        </div>
+                        <div class="space"></div>
+                        <input class="tagsInput" type="text" id="sliderDeleteTag" />
+                    </div>
+                    <div class="rowCenter">
+                        <button onclick="ocSliderTagsEditor()">确定 Confirm</button>
+                    </div>
+                </div>
+                <div id="searchContainer" class="sliderSettingMainBlock">
+                    <h3>查找 Search</h3>
+                    <input class="searchInput" type="text" id="sliderSearch" />
+                    <div class="rowCenter">
+                        <button onclick="ocsliderSearchConfirm()">确定 Confirm</button>
+                    </div>
+                </div>
+                <div id="informationContainer" class="sliderSettingMainBlock">
+                    <h3>用户手册 guide</h3>
+                    <p>cmd/ctrl + n: 新建文件 new file</p>
+                    <p>cmd/ctrl + o: 打开文件 open file</p>
+                    <p>cmd/ctrl + s: 保存文件 save file</p>
+                    <p><img src="../res/svg/plus.svg" />: 添加事件 new event</p>
+                    <p><img src="../res/svg/zoom-in.svg" />: 放大 zoom in</p>
+                    <p><img src="../res/svg/zoom-out.svg" />: 缩小 zoom out</p>
+                    <p><img src="../res/svg/sliders.svg" />: 设置 settings</p>
+                    <p><img src="../res/svg/plus-square.svg" />: 添加标签 add tag</p>
+                    <p><img src="../res/svg/minus-square.svg" />: 删除标签 delete tag</p>
+                    <p><img src="../res/svg/x.svg" />: 关闭编辑事件 close the event editor</p>
+                    <p><img src="../res/svg/clock.svg" />: 设置时间 set time</p>
+                    <p><img src="../res/svg/eye.svg" />: 设置可视事件 set viewability</p>
+                    <p><img src="../res/svg/search.svg" />: 查询 search</p>
+                    <p><img src="../res/svg/info.svg" />: 信息 info</p>
+                    <p>如果需要编辑已经新建好的事件，点击该事件再点击“编辑”即可。</p>
+                    <p>If you need to edit the event that has already been created, please click it and then click "Edit" button.</p>
+                    <h3>项目简介 Project Introduction</h3>
+                    <p>此项目初衷为帮助我自己写小说的时候确立时间线（青陵元历），因为似乎没有什么好用的可以自己定制时间线时间类型的软件。</p>
+                    <p>The original intention of this project is to assit me to list the timeline when I am writing a novel, as there are few timeline softwares that allow me to create the type of the time by myself.</p>
+                    <p>名为“贞元”是因为该词可以借指时令的周而复始和天道人事的转换，既有时间变迁的意味，同时又带有着我个人比较偏爱的轮回的史诗感。</p>
+                    <p>The name "TempusLinea" is the combination of the latin words "Tempus" and "Linea", which means "time" and "line" in English, as you have already guessed.</p>
+                    <p>项目主要使用electron.js搭建而成。本人学艺不精，尚是高中生，学习过程难谈规范，多以试验为主，所以冗余低效代码颇多，还望各位大佬海纳。</p>
+                    <p>This project mainly use electron.js. I have to say that my program skill is not so good. As a high-school student, my learning experience was no where near "professional". In fact, I mostly learned it by testing again and again. Hence,
+                        this project is full of inefficient codes, which I hope you can accept.</p>
+                    <p>还需要感谢一下开源字体LxgwBright的开发者，为本项目设计惨烈的页面勉强提了提颜值；和开源标志库feather，本项目中出现的所有按钮的标志全部是从那里下载的。</p>
+                    <p>In addition, I would like to show my gratitude to the developers of the open-source font LxgwBright, as the font improved the appereance of this project significantly. And I would also express my gratitude to the feather icon repo,
+                        where all of the icons of the buttons in this project are downloaded from.</p>
+                    <p>在最后，该项目已经完全开源，各位可以自行从Github下载源码或者从我的个人网站（尚未搭建完成）下载打包好的软件。请随意基于这个软件进行的非盈利、非商业的开发，如果你在这么做之前告知我一下，我会非常感谢，虽然这不是必须的。而若是商业开发请通过邮件联系我并经得我的同意。</p>
+                    <p>Last but not least, this project has been open sourced. You can download the source code of this project from Github or download the packaged version from my personal website(not finished yet). Please feel free to use this software
+                        for non-commercial, non-profit developments, and I will be grateful if you notify me before that(though it is not neccessary). If you want to develop it into a commercial project, please contact me by email and ask for my permission.</p>
+                    <p>github: https://github.com/Lazenander/TempusLinea</p>
+                    <p>个人网站 persional website: http://haoranyang.com</p>
+                    <p>E-mail: lazenander@163.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="buttonsContainer">
+            <div id="plus" class="button">
+                <img src="../res/svg/plus.svg" onclick="ocnewEvent()" />
+            </div>
+            <div id="zoom_in" class="button">
+                <img src="../res/svg/zoom-in.svg" onclick="oczoomIn()" />
+            </div>
+            <div id="zoom_out" class="button" onclick="oczoomOut()">
+                <img src="../res/svg/zoom-out.svg" />
+            </div>
+            <div id="sliders" class="button" onclick="occallSliders()">
+                <img src="../res/svg/sliders.svg" />
+            </div>
+        </div>
+        <div class="eventsScrollContainer">
+            <div id="eventsContainer" class="eventsContainer">
+            </div>
+            <div id="eventLinesContainer" class="eventLinesContainer">
+            </div>
+        </div>
+        <script src="../js/renderer.js"></script>
+</body>
+
+</html>

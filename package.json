@@ -1,27 +1,28 @@
 {
-  "name": "tempuslinea",
-  "version": "1.0.0",
-  "description": "A software to make simple timelines.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "Timelines"
-  ],
-  "author": "Haoran Yang",
-  "license": "ISC",
-  "dependencies": {
-    "electron": "^17.2.0",
-    "fs": "^0.0.1-security"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Lazenander/TempusLinea.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Lazenander/TempusLinea/issues"
-  },
-  "homepage": "https://github.com/Lazenander/TempusLinea#readme"
+    "name": "tempuslinea",
+    "version": "1.0.0",
+    "description": "A software to make simple timelines.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "electron .",
+        "package": "electron-packager ./ TempusLinea --all --out=package --electron-version 17.2.0 --overwrite --icon=./res/icon/icon.icns"
+    },
+    "keywords": [
+        "Timelines"
+    ],
+    "author": "Haoran Yang",
+    "license": "ISC",
+    "dependencies": {
+        "electron": "^17.2.0",
+        "fs": "^0.0.1-security"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Lazenander/TempusLinea.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Lazenander/TempusLinea/issues"
+    },
+    "homepage": "https://github.com/Lazenander/TempusLinea#readme"
 }

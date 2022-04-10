@@ -1,0 +1,484 @@
+@font-face {
+    font-family: "LXGWBright";
+    src: url("../res/font/TTF/LXGWBright-Regular.ttf") format("truetype");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(232, 232, 232);
+    font-family: "LXGWBright";
+    color: #151E17;
+}
+
+.container {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.timelineContainer {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    height: 35px;
+    background-color: rgba(232, 232, 232);
+    user-select: none;
+    color: #151E17;
+    z-index: 10;
+}
+
+.ltime {
+    position: absolute;
+    top: 0px;
+    left: 15px;
+    font-family: "LXGWBright";
+    line-height: 15px;
+    font-size: 15px;
+}
+
+.rtime {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    font-family: "LXGWBright";
+    line-height: 15px;
+    font-size: 15px;
+}
+
+.timeline {
+    position: absolute;
+    top: 33px;
+    left: 0px;
+    height: 2px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(to right, rgba(232, 232, 232) 25px, #151E17 150px, #151E17 50%, #151E17 calc(100% - 150px), rgba(232, 232, 232) calc(100% - 25px));
+}
+
+.buttonsContainer {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 50px;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: #151E17;
+    z-index: 10;
+}
+
+.button {
+    position: relative;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-shadow: 0 0 5px #151E17;
+    background-color: rgba(232, 232, 232);
+    -webkit-app-region: no-drag;
+}
+
+.timeHint {
+    position: fixed;
+    bottom: 12px;
+    right: 80px;
+    user-select: none;
+    line-height: 8px;
+    display: default;
+    z-index: 10;
+}
+
+.sliderSettingsContainer {
+    position: fixed;
+    bottom: 15px;
+    right: 80px;
+    width: 450px;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 25px;
+    color: #151E17;
+    box-shadow: 0 0 5px #151E17;
+    -webkit-app-region: no-drag;
+    background-color: rgba(232, 232, 232);
+    display: none;
+    z-index: 10;
+}
+
+.sliderSettingContentContainer {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 36px;
+    height: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sliderSettingContentButton {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-shadow: none;
+    /*box-shadow: inset 0 0 5px #151E17;*/
+    -webkit-app-region: no-drag;
+}
+
+.sliderSettingMainContainer {
+    position: absolute;
+    left: 70px;
+    top: 15px;
+    width: calc(100% - 90px);
+    height: calc(100% - 30px);
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sliderSettingMainContainer::-webkit-scrollbar {
+    width: 0px;
+}
+
+.sliderSettingMainBlock {
+    position: relative;
+    width: 100%;
+}
+
+.rowCenter {
+    margin-top: 10px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeEditorContainer {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.subSliderTimeEditor {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    position: relative;
+    width: 75px;
+}
+
+.space {
+    position: relative;
+    width: 5px;
+}
+
+.timeInputContainer {
+    position: relative;
+    width: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeInput {
+    position: relative;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    font-family: "LXGWBright";
+}
+
+.eventShowerContainer {
+    position: fixed;
+    width: 360px;
+    height: 450px;
+    left: calc(50% - 180px);
+    top: calc(50% - 225px);
+    border-radius: 25px;
+    color: #151E17;
+    box-shadow: 0 0 5px #151E17;
+    background-color: rgba(232, 232, 232);
+    z-index: 10;
+    display: none;
+}
+
+.eventShowerXButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    -webkit-app-region: no-drag;
+    user-select: none;
+}
+
+.eventShowerDescriptionContainer {
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    width: calc(100% - 40px);
+    height: calc(100% - 80px);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.eventShowerDescriptionContainer::-webkit-scrollbar {
+    width: 0px;
+}
+
+.eventShowerMainBlock {
+    position: relative;
+    margin: -15px 0;
+    width: 100%;
+}
+
+.eventShowerMainBlock4Button {
+    position: absolute;
+    width: 80%;
+    margin: 10px 0;
+    bottom: 10px;
+    left: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.eventEditorContainer {
+    position: fixed;
+    width: 450px;
+    height: 540px;
+    left: calc(50% - 225px);
+    top: calc(50% - 260px);
+    border-radius: 25px;
+    color: #151E17;
+    box-shadow: 0 0 5px #151E17;
+    background-color: rgba(232, 232, 232);
+    z-index: 10;
+    display: none;
+}
+
+.eventEditorXButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    -webkit-app-region: no-drag;
+    user-select: none;
+}
+
+.eventEditorDescriptionContainer {
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    width: calc(100% - 40px);
+    height: calc(100% - 60px);
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.eventEditorDescriptionContainer::-webkit-scrollbar {
+    width: 0px;
+}
+
+.eventEditorMainBlock {
+    position: relative;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.tagsEditorContainer {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.tagsPlusContainer {
+    position: relative;
+    margin-top: 5px;
+    width: 100%;
+    height: 16px;
+    display: flex;
+    flex-direction: row;
+    -webkit-app-region: no-drag;
+}
+
+.tagsMinusContainer {
+    position: relative;
+    margin-top: 5px;
+    width: 100%;
+    height: 16px;
+    display: flex;
+    flex-direction: row;
+    -webkit-app-region: no-drag;
+}
+
+.tagsButton {
+    width: 15px;
+}
+
+.tagsInput {
+    width: 120px;
+    font-family: "LXGWBright";
+}
+
+.checkBoxContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.checkBoxContainer p {
+    margin: 0 5px;
+}
+
+.eventInfoTitleContainer {
+    width: 100%;
+    display: flex;
+}
+
+.titleInput {
+    width: calc(100% - 10px);
+    font-family: "LXGWBright";
+}
+
+.descriptionInput {
+    width: calc(100% - 10px);
+    height: 100px;
+    resize: none;
+    font-family: "LXGWBright";
+}
+
+.eventLinesContainer {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.eventLine {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    background-color: #151E17;
+}
+
+.eventsScrollContainer {
+    position: fixed;
+    left: 0;
+    top: 35px;
+    width: 100%;
+    height: calc(100% - 35px);
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 5;
+}
+
+.eventsContainer {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 3;
+}
+
+.eventsScrollContainer::-webkit-scrollbar {
+    width: 0px;
+}
+
+.eventBlock {
+    position: absolute;
+    width: 146px;
+    height: 56px;
+    border-radius: 10px;
+    border: 2px solid #151E17;
+    background-color: rgba(232, 232, 232);
+    align-items: center;
+}
+
+.eventBlockTime {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: calc(100% - 20px);
+    height: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.eventBlockTime b {
+    margin: 0;
+    flex-wrap: nowrap;
+    font-size: 13px;
+}
+
+.eventBlockTime::-webkit-scrollbar {
+    height: 0px;
+}
+
+.eventBlockTitle {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    height: 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.eventBlockTitle p {
+    white-space: nowrap;
+    margin: 0px;
+    font-size: 15px;
+}
+
+.eventBlockTitle::-webkit-scrollbar {
+    height: 0px;
+}
+
+.searchInput {
+    width: calc(100% - 10px);
+    font-family: "LXGWBright";
+}
