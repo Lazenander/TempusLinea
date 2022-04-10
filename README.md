@@ -1,2 +1,2 @@
 # TempusLinea
- A neat and simple software to form timetables.
+ A neat and simple software to form timelines.
