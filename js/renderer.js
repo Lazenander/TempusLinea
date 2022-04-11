@@ -1,6 +1,8 @@
 const { ipcRenderer } = require("electron");
 const { EVENT, EVENTLIST } = require("../modules/event");
 
+const softwareTitle = document.getElementById("softwareTitle");
+
 const mainContainer = document.getElementById("mainContainer");
 
 const slider = document.getElementById("sliderSettings");
@@ -50,6 +52,9 @@ const eventShowerTitle = document.getElementById("eventShowerTitle");
 const eventShowerTags = document.getElementById("eventShowerTags");
 const eventShowerDescription = document.getElementById("eventShowerDescription");
 
+const openFileButton = document.getElementById("openFile");
+const saveFileButton = document.getElementById("saveFile");
+
 const unsettedTimeRegion = [timeTypeEditor, timeTypeEditorButton];
 const settedTimeRegion = [startTimeTypeEditorContainer, startTimeTypeEditorButton, endTimeTypeEditorContainer, endTimeTypeEditorButton];
 const viewRegion = [tagsContainer];
@@ -71,6 +76,8 @@ let isNewEventOpen = false;
 let isEventShowerOpen = false;
 let isEventEditorType = { type: "new", event: emptyEvent };
 
+let edited = false;
+
 let showEvent = emptyEvent;
 
 let sliderSetting = "clock";
@@ -79,15 +86,17 @@ let eventList = new EVENTLIST();
 let viewableTags = {};
 let viewableText = "";
 
+let loadingFlag = false;
+
 let pxWidth = 800 - startPos - endPos;
 
 var calendar,
-    calendarInfo,
-    calendarForward,
-    calendarBackward,
-    calendarDistance,
-    calendarIsValid,
-    calendarPrint;
+    info,
+    forward,
+    backward,
+    distance,
+    isValid,
+    print;
 var startTime,
     endTime;
 
@@ -106,15 +115,114 @@ ipcRenderer.on("resize", (e, data) => {
     pxWidth = newpxWidth;
 });
 
+ipcRenderer.on("openTLfile", (e, data) => {
+    loadingFlag = true;
+    data = JSON.parse(data);
+    console.log(data);
+    readEventListContent(data.eventListContent);
+    readSettings(data.settings);
+    loadCalendar2Slider();
+    timeTypeSetSuccessfully();
+    updateMT2P();
+    updateTimeByWidth(pxWidth);
+    updateTimeLine();
+    changeEventEditorTagList();
+    loadingFlag = false;
+})
+
+function setEdited() {
+    if (edited == false) {
+        softwareTitle.innerHTML = "贞元 TempusLinea - Edited";
+        edited = true;
+        ipcRenderer.send("edited");
+    }
+}
+
+ipcRenderer.on("saved", (event, arg) => {
+    if (edited == true) {
+        softwareTitle.innerHTML = "贞元 TempusLinea";
+        edited = false;
+    }
+})
+
+function function2String(func) {
+    let fstr = func.toString();
+    let args = fstr.split("(")[1].split(")")[0].split(",");
+    let content = fstr.slice(fstr.indexOf("{") + 1, -1);
+    return { args: args, content: content };
+}
+
+function string2Function(fstr) {
+    let args = fstr.args;
+    let content = fstr.content;
+    return new Function(...args, content);
+}
+
+function openTLFile() {
+    ipcRenderer.send("openTLfile");
+}
+
+ipcRenderer.on("closeSaveFile", (event, arg) => {
+    let data = {
+        settings: outputSettings(),
+        eventListContent: outputEventListContent()
+    };
+    ipcRenderer.send("closeSaveTLfile", JSON.stringify(data));
+})
+
+function ocopenFile() {
+    openTLFile();
+}
+
+function ocsaveFile() {
+    if (isTimeTypeUnset == false)
+        saveTLFile();
+}
+
+function saveTLFile() {
+    let data = {
+        settings: outputSettings(),
+        eventListContent: outputEventListContent()
+    };
+    ipcRenderer.send("saveTLfile", JSON.stringify(data));
+}
+
+function outputEventListContent() {
+    let events = [];
+    for (let i = 0; i < eventList.length; i++)
+        events.push({
+            time: eventList.events[i].time,
+            title: eventList.events[i].title,
+            description: eventList.events[i].description,
+            tags: eventList.events[i].tags,
+        })
+    return {
+        length: eventList.length,
+        events: events,
+        tagsLength: eventList.tagsLength,
+        tags: eventList.tags,
+    }
+}
+
+function readEventListContent(eventListContent) {
+    let events = [];
+    for (let i = 0; i < eventListContent.length; i++)
+        events.push(new EVENT(eventListContent.events[i].time, eventListContent.events[i].tags, eventListContent.events[i].title, eventListContent.events[i].description));
+    eventList.length = eventListContent.length;
+    eventList.events = events;
+    eventList.tagsLength = eventListContent.tagsLength;
+    eventList.tags = eventListContent.tags;
+}
+
 function outputSettings() {
     return {
-        calender: {
-            info: calendarInfo,
-            forward: calendarForward,
-            backward: calendarBackward,
-            distance: calendarDistance,
-            isValid: calendarIsValid,
-            print: calendarPrint
+        calendar: {
+            info: info,
+            forward: function2String(forward),
+            backward: function2String(backward),
+            distance: function2String(distance),
+            isValid: function2String(isValid),
+            print: function2String(print)
         },
         startTime: startTime,
         endTime: endTime,
@@ -126,38 +234,42 @@ function outputSettings() {
 }
 
 function readSettings(settings) {
-    calendarInfo = settings.calendar.info;
-    calendarForward = settings.calendar.forward;
-    calendarBackward = settings.calendar.backward;
-    calendarDistance = settings.calendar.distance;
-    calendarIsValid = settings.calendar.isValid;
-    calendarPrint = settings.calendar.print;
+    console.log(settings.calendar.forward);
+    info = settings.calendar.info;
+    forward = string2Function(settings.calendar.forward);
+    backward = string2Function(settings.calendar.backward);
+    distance = string2Function(settings.calendar.distance);
+    isValid = string2Function(settings.calendar.isValid);
+    print = string2Function(settings.calendar.print);
     startTime = settings.startTime;
     endTime = settings.endTime;
     minimizeTime2px = settings.minimizeTime2px;
     pxWidth = settings.pxWidth;
     viewableTags = settings.viewableTags;
     viewableText = settings.viewableText;
+    for (let i in viewableTags)
+        viewableTags[i] = true;
+    viewableText = "";
     ipcRenderer.send("resizeWin", [pxWidth + startPos + endPos, 600]);
     isTimeTypeUnset = false;
 }
 
 function updateMT2P() {
-    minimizeTime2px = calendarDistance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / pxWidth;
-    console.log(minimizeTime2px, pxWidth, calendarDistance(DEEPCOPY(endTime), DEEPCOPY(startTime)));
+    minimizeTime2px = distance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / pxWidth;
+    console.log(minimizeTime2px, pxWidth, distance(DEEPCOPY(endTime), DEEPCOPY(startTime)));
 }
 
 function updateTimeByWidth(newpxWidth) {
     let newDistance = Math.round(minimizeTime2px * (newpxWidth - pxWidth) / 2);
     console.log(newDistance);
-    let time1 = calendarBackward(DEEPCOPY(startTime), newDistance);
-    let time2 = calendarForward(DEEPCOPY(endTime), newDistance);
-    let distanceAfter = calendarDistance(DEEPCOPY(time1), DEEPCOPY(time2));
+    let time1 = backward(DEEPCOPY(startTime), newDistance);
+    let time2 = forward(DEEPCOPY(endTime), newDistance);
+    let distanceAfter = distance(DEEPCOPY(time1), DEEPCOPY(time2));
     if (distanceAfter == 0) {
-        time2 = calendarForward(DEEPCOPY(endTime), 1);
-        distanceAfter = calendarDistance(DEEPCOPY(time1), DEEPCOPY(time2));
+        time2 = forward(DEEPCOPY(endTime), 1);
+        distanceAfter = distance(DEEPCOPY(time1), DEEPCOPY(time2));
         if (distanceAfter == 0)
-            time1 = calendarBackward(DEEPCOPY(startTime), 1);
+            time1 = backward(DEEPCOPY(startTime), 1);
     }
     if (distanceAfter > 0) {
         let tmp = DEEPCOPY(time1);
@@ -166,7 +278,7 @@ function updateTimeByWidth(newpxWidth) {
     }
     changeLeftTime(time1);
     changeRightTime(time2);
-    console.log(newpxWidth, minimizeTime2px, calendarDistance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / newpxWidth)
+    console.log(newpxWidth, minimizeTime2px, distance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / newpxWidth)
 }
 
 function DEEPCOPY(obj) {
@@ -214,7 +326,7 @@ function level2Y(level) {
 }
 
 function time2X(time) {
-    return calendarDistance(DEEPCOPY(time), DEEPCOPY(startTime)) / minimizeTime2px;
+    return distance(DEEPCOPY(time), DEEPCOPY(startTime)) / minimizeTime2px;
 }
 
 function formEventLine(xpos, ysize) {
@@ -244,7 +356,7 @@ function formEventBlock(xpos, ypos, event) {
     let eventBlockTime = document.createElement("div");
     eventBlockTime.className = "eventBlockTime";
     let eventBlockB = document.createElement("b");
-    eventBlockB.innerHTML = calendarPrint(event.time);
+    eventBlockB.innerHTML = print(event.time);
     let eventBlockTitle = document.createElement("div");
     eventBlockTitle.className = "eventBlockTitle";
     let eventBlockTitleSub = document.createElement("div");
@@ -269,7 +381,7 @@ function addEvent(xpos, level, event) {
 }
 
 function renderTimeLine() {
-    let region = eventList.giveRegion(startTime, endTime, calendarDistance);
+    let region = eventList.giveRegion(startTime, endTime, distance);
     let mem = [];
     console.log(region.left, region.right);
     for (let i = region.left; i < region.right; i++) {
@@ -315,7 +427,10 @@ function timeTypeSetSuccessfully() {
     REND_hideObj(hint);
     isTimeTypeUnset = false;
     sliderContentChanged();
+    switchOpen2Save();
     updateMT2P();
+    if (loadingFlag == false)
+        setEdited();
 }
 
 function occallSliders() {
@@ -386,30 +501,30 @@ function ocsliderTimeTypeEditor() {
 
 function ocstartSliderTimeTypeEditor() {
     let timeValues = [];
-    for (let i = 0; i < calendarInfo.timeValueLength; i++) {
+    for (let i = 0; i < info.timeValueLength; i++) {
         let timeValue = document.getElementById("startTime" + i).value;
         timeValues.push(timeValue);
     }
-    if (calendarIsValid(DEEPCOPY(timeValues)) && calendarDistance(DEEPCOPY(timeValues), DEEPCOPY(endTime)) < 0)
+    if (isValid(DEEPCOPY(timeValues)) && distance(DEEPCOPY(timeValues), DEEPCOPY(endTime)) < 0)
         changeLeftTime(timeValues);
-    else if (calendarDistance(DEEPCOPY(timeValues), DEEPCOPY(endTime)) >= 0)
-        changeLeftTime(calendarBackward(DEEPCOPY(endTime)));
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
+    else if (distance(DEEPCOPY(timeValues), DEEPCOPY(endTime)) >= 0)
+        changeLeftTime(backward(DEEPCOPY(endTime)));
+    for (let i = 0; i < info.timeValueLength; i++)
         document.getElementById("startTime" + i).value = startTime[i];
     updateTimeLine();
 }
 
 function ocendSliderTimeTypeEditor() {
     let timeValues = [];
-    for (let i = 0; i < calendarInfo.timeValueLength; i++) {
+    for (let i = 0; i < info.timeValueLength; i++) {
         let timeValue = document.getElementById("endTime" + i).value;
         timeValues.push(timeValue);
     }
-    if (calendarIsValid(DEEPCOPY(timeValues)) && calendarDistance(DEEPCOPY(startTime), DEEPCOPY(timeValues)) < 0)
+    if (isValid(DEEPCOPY(timeValues)) && distance(DEEPCOPY(startTime), DEEPCOPY(timeValues)) < 0)
         changeRightTime(timeValues);
-    else if (calendarDistance(DEEPCOPY(startTime), DEEPCOPY(timeValues)) >= 0)
-        changeRightTime(calendarForward(DEEPCOPY(startTime)));
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
+    else if (distance(DEEPCOPY(startTime), DEEPCOPY(timeValues)) >= 0)
+        changeRightTime(forward(DEEPCOPY(startTime)));
+    for (let i = 0; i < info.timeValueLength; i++)
         document.getElementById("endTime" + i).value = endTime[i];
     updateTimeLine();
 }
@@ -455,6 +570,8 @@ function oceventTagsEditorPlus() {
         REND_addChild(eventTagsEditor, formEventEditorTag(eventEditorNewTag.value));
         changeSliderTagList();
         eventEditorNewTag.value = "";
+        if (loadingFlag == false)
+            setEdited();
     }
 }
 
@@ -464,6 +581,8 @@ function oceventTagsEditorMinus() {
         changeEventEditorTagList();
         changeSliderTagList();
         eventEditorDeleteTag.value = "";
+        if (loadingFlag == false)
+            setEdited();
     }
 }
 
@@ -474,6 +593,8 @@ function ocsliderTagsEditorPlus() {
         changeEventEditorTagList();
         changeSliderTagList();
         sliderNewTag.value = "";
+        if (loadingFlag == false)
+            setEdited();
     }
 }
 
@@ -484,6 +605,8 @@ function ocsliderTagsEditorMinus() {
         changeEventEditorTagList();
         changeSliderTagList();
         sliderDeleteTag.value = "";
+        if (loadingFlag == false)
+            setEdited();
     }
 }
 
@@ -515,9 +638,9 @@ function ocSliderTagsEditor() {
 
 function oceventEditorFinished() {
     let eventTime = [];
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
+    for (let i = 0; i < info.timeValueLength; i++)
         eventTime.push(document.getElementById("eventTime" + i).value);
-    if (!calendarIsValid(DEEPCOPY(eventTime))) {
+    if (!isValid(DEEPCOPY(eventTime))) {
         alert("时间不存在！Invalid time!");
         return;
     }
@@ -544,13 +667,15 @@ function oceventEditorFinished() {
     console.log(eventTime, checkedTags, title, description);
     console.log(isEventEditorType.type);
     if (isEventEditorType.type == "new")
-        eventList.addEvent(new EVENT(eventTime, checkedTags, title, description), calendarDistance);
+        eventList.addEvent(new EVENT(eventTime, checkedTags, title, description), distance);
     else
-        eventList.updateEvent(isEventEditorType.event, new EVENT(eventTime, checkedTags, title, description), calendarDistance);
+        eventList.updateEvent(isEventEditorType.event, new EVENT(eventTime, checkedTags, title, description), distance);
     REND_hideObj(eventEditor);
     updateTimeLine();
     isNewEventOpen = false;
     isEventEditorType = { type: "new", event: emptyEvent };
+    if (loadingFlag == false)
+        setEdited();
 }
 
 function refreshEventEditor() {
@@ -577,7 +702,7 @@ function refreshEventEditor() {
 
 function refreshEventShower() {
     console.log(isEventEditorType);
-    let timeValues = calendarPrint(showEvent.time),
+    let timeValues = print(showEvent.time),
         tags = showEvent.tags,
         title = showEvent.title,
         description = showEvent.description;
@@ -589,6 +714,8 @@ function refreshEventShower() {
 
 function ocdeleteShowedEvent() {
     eventList.deleteEvent(showEvent);
+    if (loadingFlag == false)
+        setEdited();
     showEvent = emptyEvent;
     ocesx();
     updateTimeLine();
@@ -616,15 +743,15 @@ function ocSS() {
 
 function loadCalendar(url) {
     calendar = require(url);
-    calendarInfo = calendar.info;
-    calendarForward = calendar.forward;
-    calendarBackward = calendar.backward;
-    calendarDistance = calendar.distance;
-    calendarIsValid = calendar.isValid;
-    calendarPrint = calendar.print;
+    info = calendar.info;
+    forward = calendar.forward;
+    backward = calendar.backward;
+    distance = calendar.distance;
+    isValid = calendar.isValid;
+    print = calendar.print;
     loadCalendar2Slider();
-    changeLeftTime(calendarInfo.defaultStartTime);
-    changeRightTime(calendarInfo.defaultEndTime);
+    changeLeftTime(info.defaultStartTime);
+    changeRightTime(info.defaultEndTime);
 }
 
 function loadCalendar2Slider() {
@@ -702,8 +829,8 @@ function addSliderStartTimeEditorDIV(timeName, idName, timeValue) {
 }
 
 function formSliderStartTimeEditor() {
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
-        addSliderStartTimeEditorDIV(calendarInfo.timeValueNames[i], "startTime" + i, calendarInfo.defaultStartTime[i]);
+    for (let i = 0; i < info.timeValueLength; i++)
+        addSliderStartTimeEditorDIV(info.timeValueNames[i], "startTime" + i, info.defaultStartTime[i]);
 }
 
 function addSliderEndTimeEditorDIV(timeName, idName, timeValue) {
@@ -712,8 +839,8 @@ function addSliderEndTimeEditorDIV(timeName, idName, timeValue) {
 }
 
 function formSliderEndTimeEditor() {
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
-        addSliderEndTimeEditorDIV(calendarInfo.timeValueNames[i], "endTime" + i, calendarInfo.defaultEndTime[i]);
+    for (let i = 0; i < info.timeValueLength; i++)
+        addSliderEndTimeEditorDIV(info.timeValueNames[i], "endTime" + i, info.defaultEndTime[i]);
 }
 
 function addEventTimeEditorDIV(timeName, idName, timeValue) {
@@ -722,8 +849,8 @@ function addEventTimeEditorDIV(timeName, idName, timeValue) {
 }
 
 function formEventTimeEditorDIV(timeValues) {
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
-        addEventTimeEditorDIV(calendarInfo.timeValueNames[i], "eventTime" + i, timeValues[i]);
+    for (let i = 0; i < info.timeValueLength; i++)
+        addEventTimeEditorDIV(info.timeValueNames[i], "eventTime" + i, timeValues[i]);
 }
 
 function deleteEventTimeEditorDIV() {
@@ -731,26 +858,30 @@ function deleteEventTimeEditorDIV() {
 }
 
 function updateSliderStartTime() {
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
+    for (let i = 0; i < info.timeValueLength; i++)
         document.getElementById("startTime" + i).value = startTime[i];
 }
 
 function changeLeftTime(timeValues) {
-    leftTime.innerHTML = calendarPrint(DEEPCOPY(timeValues));
+    leftTime.innerHTML = print(DEEPCOPY(timeValues));
     startTime = timeValues;
     emptyEvent.time = startTime;
     updateSliderStartTime();
+    if (loadingFlag == false)
+        setEdited();
 }
 
 function updateSliderEndTime() {
-    for (let i = 0; i < calendarInfo.timeValueLength; i++)
+    for (let i = 0; i < info.timeValueLength; i++)
         document.getElementById("endTime" + i).value = endTime[i];
 }
 
 function changeRightTime(timeValues) {
-    rightTime.innerHTML = calendarPrint(DEEPCOPY(timeValues));
+    rightTime.innerHTML = print(DEEPCOPY(timeValues));
     endTime = timeValues;
     updateSliderEndTime();
+    if (loadingFlag == false)
+        setEdited();
 }
 
 function formEventEditorTag(tagValue) {
@@ -809,4 +940,9 @@ function deleteSliderTagList() {
 function changeSliderTagList() {
     deleteSliderTagList();
     formSliderTagList();
+}
+
+function switchOpen2Save() {
+    openFile.style.display = "none";
+    saveFile.style.display = "flex";
 }

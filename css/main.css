@@ -74,6 +74,20 @@ body {
     z-index: 10;
 }
 
+.fileButtonsContainer {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: #151E17;
+    z-index: 10;
+}
+
 .button {
     position: relative;
     height: 50px;

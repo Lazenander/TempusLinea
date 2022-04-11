@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../css/main.css" />
-    <title>贞元 TempusLinea</title>
+    <title id="softwareTitle">贞元 TempusLinea</title>
 </head>
 
 <body>
@@ -181,9 +181,8 @@
                 </div>
                 <div id="informationContainer" class="sliderSettingMainBlock">
                     <h3>用户手册 guide</h3>
-                    <p>cmd/ctrl + n: 新建文件 new file</p>
-                    <p>cmd/ctrl + o: 打开文件 open file</p>
-                    <p>cmd/ctrl + s: 保存文件 save file</p>
+                    <p><img src="../res/svg/file-text.svg" />: 打开文件 open file</p>
+                    <p><img src="../res/svg/save.svg" />: 保存文件 save file</p>
                     <p><img src="../res/svg/plus.svg" />: 添加事件 new event</p>
                     <p><img src="../res/svg/zoom-in.svg" />: 放大 zoom in</p>
                     <p><img src="../res/svg/zoom-out.svg" />: 缩小 zoom out</p>
@@ -229,6 +228,14 @@
             </div>
             <div id="sliders" class="button" onclick="occallSliders()">
                 <img src="../res/svg/sliders.svg" />
+            </div>
+        </div>
+        <div class="fileButtonsContainer">
+            <div id="openFile" class="button">
+                <img src="../res/svg/file-text.svg" onclick="ocopenFile()" />
+            </div>
+            <div id="saveFile" class="button" style="display:none">
+                <img src="../res/svg/save.svg" onclick="ocsaveFile()" />
             </div>
         </div>
         <div class="eventsScrollContainer">

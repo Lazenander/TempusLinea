@@ -1,4 +1,6 @@
 function forward(timeValues, dist = 1) {
+    if (dist < 0)
+        return backward(timeValues, -dist);
     timeValues[0] = parseInt(timeValues[0]);
     timeValues[1] = parseInt(timeValues[1]);
     timeValues[2] = parseInt(timeValues[2]);
@@ -14,6 +16,8 @@ function forward(timeValues, dist = 1) {
 }
 
 function backward(timeValues, dist = 1) {
+    if (dist < 0)
+        return forward(timeValues, -dist);
     timeValues[0] = parseInt(timeValues[0]);
     timeValues[1] = parseInt(timeValues[1]);
     timeValues[2] = parseInt(timeValues[2]);
