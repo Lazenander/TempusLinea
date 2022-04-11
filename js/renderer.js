@@ -104,7 +104,6 @@ var startTime,
 var minimizeTime2px;
 
 ipcRenderer.on("resize", (e, data) => {
-    console.log(data[0]);
     let newpxWidth = data[0] - startPos - endPos;
     if (isTimeTypeUnset == false) {
         updateMT2P()
@@ -119,7 +118,6 @@ ipcRenderer.on("resize", (e, data) => {
 ipcRenderer.on("openTLfile", (e, data) => {
     loadingFlag = true;
     data = JSON.parse(data);
-    console.log(data);
     readEventListContent(data.eventListContent);
     readSettings(data.settings);
     loadCalendar2Slider();
@@ -243,7 +241,6 @@ function outputSettings() {
 }
 
 function readSettings(settings) {
-    console.log(settings.calendar.forward);
     info = settings.calendar.info;
     forward = string2Function(settings.calendar.forward);
     backward = string2Function(settings.calendar.backward);
@@ -265,12 +262,10 @@ function readSettings(settings) {
 
 function updateMT2P() {
     minimizeTime2px = distance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / pxWidth;
-    console.log(minimizeTime2px, pxWidth, distance(DEEPCOPY(endTime), DEEPCOPY(startTime)));
 }
 
 function updateTimeByWidth(newpxWidth) {
     let newDistance = Math.round(minimizeTime2px * (newpxWidth - pxWidth) / 2);
-    console.log(newDistance);
     let time1 = backward(DEEPCOPY(startTime), newDistance);
     let time2 = forward(DEEPCOPY(endTime), newDistance);
     let distanceAfter = distance(DEEPCOPY(time1), DEEPCOPY(time2));
@@ -287,7 +282,6 @@ function updateTimeByWidth(newpxWidth) {
     }
     changeLeftTime(time1);
     changeRightTime(time2);
-    console.log(newpxWidth, minimizeTime2px, distance(DEEPCOPY(endTime), DEEPCOPY(startTime)) / newpxWidth)
 }
 
 function DEEPCOPY(obj) {
@@ -392,7 +386,6 @@ function addEvent(xpos, level, event) {
 function renderTimeLine() {
     let region = eventList.giveRegion(startTime, endTime, distance);
     let mem = [];
-    console.log(region.left, region.right);
     for (let i = region.left; i < region.right; i++) {
         let vflag = false;
         for (let j in viewableTags) {
@@ -645,7 +638,6 @@ function ocSliderTagsEditor() {
             viewableTags[tags[i].value] = false;
     }
     updateTimeLine();
-    console.log(viewableTags);
 }
 
 function oceventEditorFinished() {
@@ -676,8 +668,6 @@ function oceventEditorFinished() {
         alert("无事件内容！No description!");
         return;
     }
-    console.log(eventTime, checkedTags, title, description);
-    console.log(isEventEditorType.type);
     if (isEventEditorType.type == "new")
         eventList.addEvent(new EVENT(eventTime, checkedTags, title, description), distance);
     else
@@ -691,7 +681,6 @@ function oceventEditorFinished() {
 }
 
 function refreshEventEditor() {
-    console.log(isEventEditorType);
     let timeValues = isEventEditorType.event.time,
         tags = isEventEditorType.event.tags,
         title = isEventEditorType.event.title,
@@ -713,7 +702,6 @@ function refreshEventEditor() {
 }
 
 function refreshEventShower() {
-    console.log(isEventEditorType);
     let timeValues = print(showEvent.time),
         tags = showEvent.tags,
         title = showEvent.title,

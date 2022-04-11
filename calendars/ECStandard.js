@@ -7,7 +7,6 @@ function forward(timeValues, dist = 1) {
     timeValues[3] = parseInt(timeValues[3]) - 1;
     let int1 = timeValues[0] * 360 + timeValues[1] * 90 + timeValues[2] * 10 + timeValues[3];
     int1 += dist;
-    console.log(int1);
     timeValues[0] = Math.floor(int1 / 360);
     timeValues[1] = Math.floor((int1 - timeValues[0] * 360) / 90);
     timeValues[2] = Math.floor((int1 - timeValues[0] * 360 - timeValues[1] * 90) / 10);

@@ -87,7 +87,6 @@ class EVENTLIST {
 
     deleteEventByIndex(index) {
         this.events.splice(index, 1);
-        console.log(index)
         this.length--;
     }
 
@@ -105,11 +104,9 @@ class EVENTLIST {
     };
 
     updateEvent(oldEvent, newEvent, distance) {
-        console.log(oldEvent)
         for (let i = 0; i < this.events.length; i++)
             if (this.events[i] === oldEvent) {
                 this.updateEventByIndex(i, newEvent, distance)
-                console.log(i)
                 break;
             }
     }

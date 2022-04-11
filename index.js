@@ -28,20 +28,18 @@ const createWindow = () => {
         if (edited) {
             dialog.showMessageBox(win, {
                 type: 'question',
-                buttons: ['Save', 'Don\'t Save', 'Cancel'],
+                buttons: ['保存 Save', '不保存 Don\'t Save', '取消 Cancel'],
                 defaultId: 0,
-                title: 'Save changes?',
-                message: 'Do you want to save the changes you made in the document?',
-                detail: 'Your changes will be lost if you don\'t save them.'
+                title: '保存修改？Save changes?',
+                message: '你希望保存文档修改吗？Do you want to save the changes you made in the document?',
+                detail: '如果不保存，您的文档信息会丢失。Your changes will be lost if you don\'t save them.'
             }).then((res) => {
                 let buttonIndex = res.response;
-                console.log(buttonIndex)
-                if (buttonIndex == 0) {
+                if (buttonIndex == 0)
                     win.webContents.send('closeSaveFile');
-                } else if (buttonIndex == 1) {
-                    console.log(1)
+                else if (buttonIndex == 1)
                     win.close();
-                } else
+                else
                     shouldClose = false;
             })
         } else
@@ -49,7 +47,6 @@ const createWindow = () => {
     });
     //win.webContents.openDevTools();
     ipcMain.on('resizeWin', (event, size) => {
-        console.log(size);
         win.setSize(size[0], size[1]);
     });
     ipcMain.on("closeSaveTLfile", (event, arg) => {
