@@ -18,6 +18,7 @@ const sliderButton = document.getElementById("sliders");
 const leftTime = document.getElementById("leftTime");
 const rightTime = document.getElementById("rightTime");
 
+const DIYjsinput = document.getElementById("DIYjsinput");
 const timeTypeEditor = document.getElementById("timeTypeEditor");
 const timeTypeEditorButton = document.getElementById("timeTypeEditorButton");
 const startTimeTypeEditorContainer = document.getElementById("startTimeTypeEditorContainer");
@@ -169,6 +170,14 @@ ipcRenderer.on("closeSaveFile", (event, arg) => {
     };
     ipcRenderer.send("closeSaveTLfile", JSON.stringify(data));
 })
+
+/*ipcRenderer.on("csSaveFile", () => {
+    let data = {
+        settings: outputSettings(),
+        eventListContent: outputEventListContent()
+    };
+    ipcRenderer.send("saveTLfile", JSON.stringify(data));
+})*/
 
 function ocopenFile() {
     openTLFile();
@@ -489,6 +498,9 @@ function ocsliderTimeTypeEditor() {
                     break;
                 case "ECStandard":
                     loadCalendar("../calendars/ECStandard.js");
+                    break;
+                case "DIY":
+                    loadCalendar(DIYjsinput.value);
                     break;
                 default:
                     loadCalendar("../calendars/Gregorian.js");

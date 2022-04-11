@@ -15,7 +15,6 @@ function forward(timeValues, dist = 1) {
     timeValues[1]++;
     timeValues[2]++;
     timeValues[3]++;
-    timeValues = timeValues.toString().split(',');
     return timeValues;
 }
 
@@ -34,9 +33,8 @@ function backward(timeValues, dist = 1) {
     timeValues[1]++;
     timeValues[2]++;
     timeValues[3]++;
-    timeValues = timeValues.toString().split(',');
     if (!isValid(timeValues))
-        timeValues = ["0", "1", "1", "1"];
+        timeValues = [0, 1, 1, 1];
     return timeValues;
 }
 
@@ -68,14 +66,14 @@ function isValid(timeValues) {
 }
 
 function print(timeValues) {
-    return timeValues[0] + "." + timeValues[1] + "." + timeValues[2] + "." + timeValues[3];
+    return "" + timeValues[0] + "." + timeValues[1] + "." + timeValues[2] + "." + timeValues[3];
 }
 
 exports.info = {
     timeValueNames: ["年 Year", "季 Season", "旬 Week", "日 Day"],
     timeValueLength: 4,
-    defaultStartTime: ["0", "1", "1", "1"],
-    defaultEndTime: ["10", "1", "1", "1"],
+    defaultStartTime: [0, 1, 1, 1],
+    defaultEndTime: [10, 1, 1, 1],
     version: "1.0.0",
 };
 exports.forward = forward;

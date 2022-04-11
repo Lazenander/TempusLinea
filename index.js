@@ -1,4 +1,4 @@
-const { app, ipcMain, dialog, BrowserWindow } = require('electron')
+const { app, ipcMain, dialog, globalShortcut, BrowserWindow } = require('electron')
 const fs = require('fs');
 
 let edited = false;
@@ -53,22 +53,25 @@ const createWindow = () => {
         win.setSize(size[0], size[1]);
     });
     ipcMain.on("closeSaveTLfile", (event, arg) => {
-        if (filePath == "") {
-            dialog.showSaveDialog({
-                properties: ['openFile'],
-                filters: [{ name: '贞元文件 TempusLinea File', extensions: ['tlf'] }]
-            }).then(result => {
-                if (result.canceled)
-                    return;
-                filePath = result.filePath;
-                fs.writeFileSync(result.filePath, arg, 'utf8');
+            if (filePath == "") {
+                dialog.showSaveDialog({
+                    properties: ['openFile'],
+                    filters: [{ name: '贞元文件 TempusLinea File', extensions: ['tlf'] }]
+                }).then(result => {
+                    if (result.canceled)
+                        return;
+                    filePath = result.filePath;
+                    fs.writeFileSync(result.filePath, arg, 'utf8');
+                    win.close();
+                })
+            } else {
+                fs.writeFileSync(filePath, arg, 'utf8');
                 win.close();
-            })
-        } else {
-            fs.writeFileSync(filePath, arg, 'utf8');
-            win.close();
-        }
-    })
+            }
+        })
+        /*globalShortcut.register('CommandOrControl+S', () => {
+            win.webContents.send('csSaveFile');
+        })*/
 }
 
 app.whenReady().then(() => {

@@ -89,7 +89,6 @@ function forward(timeValues, dist = 1) {
                 break;
         }
     }
-    timeValues = timeValues.toString().split(',');
     return timeValues;
 }
 
@@ -184,7 +183,6 @@ function backward(timeValues, dist = 1) {
                 break;
         }
     }
-    timeValues = timeValues.toString().split(',');
     return timeValues;
 }
 
@@ -304,8 +302,8 @@ function print(timeValues) {
 exports.info = {
     timeValueNames: ["年 Year", "月 Month", "日 Day"],
     timeValueLength: 3,
-    defaultStartTime: ["2020", "1", "1"],
-    defaultEndTime: ["2030", "1", "1"],
+    defaultStartTime: [2020, 1, 1],
+    defaultEndTime: [2030, 1, 1],
     version: "1.0.0",
 };
 exports.forward = forward;

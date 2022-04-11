@@ -9,9 +9,8 @@ function forward(timeValues, dist = 1) {
     timeValues[0] = Math.floor(int1 / 3600);
     timeValues[1] = Math.floor((int1 % 3600) / 60);
     timeValues[2] = int1 % 60;
-    timeValues = timeValues.toString().split(',');
     if (!isValid(timeValues))
-        timeValues = ["23", "59", "59"];
+        timeValues = [23, 59, 59];
     return timeValues;
 }
 
@@ -26,9 +25,8 @@ function backward(timeValues, dist = 1) {
     timeValues[0] = Math.floor(int1 / 3600);
     timeValues[1] = Math.floor((int1 % 3600) / 60);
     timeValues[2] = int1 % 60;
-    timeValues = timeValues.toString().split(',');
     if (!isValid(timeValues))
-        timeValues = ["0", "0", "0"];
+        timeValues = [0, 0, 0];
     return timeValues;
 }
 
@@ -56,21 +54,24 @@ function isValid(timeValues) {
 }
 
 function print(timeValues) {
+    timeValues[0] = parseInt(timeValues[0]);
+    timeValues[1] = parseInt(timeValues[1]);
+    timeValues[2] = parseInt(timeValues[2]);
     timeValues = timeValues.toString().split(',');
-    if (timeValues[0].length == 1)
+    if (timeValues[0] % 10 == timeValues[0])
         timeValues[0] = "0" + timeValues[0];
-    if (timeValues[1].length == 1)
+    if (timeValues[1] % 10 == timeValues[1])
         timeValues[1] = "0" + timeValues[1];
-    if (timeValues[2].length == 1)
+    if (timeValues[2] % 10 == timeValues[2])
         timeValues[2] = "0" + timeValues[2];
-    return timeValues[0] + ":" + timeValues[1] + ":" + timeValues[2];
+    return "" + timeValues[0] + ":" + timeValues[1] + ":" + timeValues[2];
 }
 
 exports.info = {
     timeValueNames: ["时 Hour", "分 Minute", "秒 Second"],
     timeValueLength: 3,
-    defaultStartTime: ["0", "0", "0"],
-    defaultEndTime: ["23", "59", "59"],
+    defaultStartTime: [0, 0, 0],
+    defaultEndTime: [23, 59, 59],
     version: "1.0.0",
 };
 exports.forward = forward;
