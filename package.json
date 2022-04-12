@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "electron .",
-        "package": "electron-packager ./ TempusLinea --darwin --out=package --electron-version 17.2.0 --overwrite --icon=./res/icon/icon.icns"
+        "package": "electron-packager ./ TempusLinea --all --out=package --electron-version 17.2.0 --overwrite --icon=./res/icon/icon.icns"
     },
     "keywords": [
         "Timelines"
