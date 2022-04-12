@@ -107,10 +107,12 @@ ipcMain.on('saveTLfile', (event, arg) => {
                 return;
             filePath = result.filePath;
             fs.writeFileSync(result.filePath, arg, 'utf8');
+            event.sender.send("saved");
         })
-    } else
+    } else {
         fs.writeFileSync(filePath, arg, 'utf8');
-    event.sender.send("saved");
+        event.sender.send("saved");
+    }
     edited = false;
 })
 
