@@ -261,7 +261,7 @@ body {
     width: calc(100% - 40px);
     height: calc(100% - 80px);
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: column;
     align-items: center;
     overflow-x: hidden;
@@ -275,6 +275,7 @@ body {
 .eventShowerMainBlock {
     position: relative;
     margin: -15px 0;
+    word-break: break-word;
     width: 100%;
 }
 

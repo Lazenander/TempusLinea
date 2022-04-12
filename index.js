@@ -45,7 +45,7 @@ const createWindow = () => {
         } else
             win.close();
     });
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     ipcMain.on('resizeWin', (event, size) => {
         win.setSize(size[0], size[1]);
     });
