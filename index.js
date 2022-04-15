@@ -19,6 +19,7 @@ const createWindow = () => {
     })
 
     win.loadFile('./html/index.html');
+    win.setMenu(null);
     win.on('resized', () => { win.webContents.send("resize", win.getSize()); })
     win.on('close', (e) => {
         if (shouldClose)

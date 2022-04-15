@@ -14,7 +14,7 @@
     "author": "Haoran Yang",
     "license": "GPL-3.0",
     "dependencies": {
-        "electron": "^17.2.0",
+        "electron": "^18.0.3",
         "fs": "^0.0.1-security"
     },
     "repository": {
